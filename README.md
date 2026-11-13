@@ -2,6 +2,8 @@
 
 A CPU and GPU bottleneck estimator styled as a stamped laboratory test report. Pick a processor, a graphics card, a resolution and what you use the PC for, and BChecker estimates which part is holding the other back and by how much.
 
+**Live site: https://bchecker-next.vercel.app**
+
 ![BChecker screenshot](docs/screenshot.jpg)
 
 This is a rebuild of an earlier Laravel + PHP + MySQL version. The hand-entered 48-row result table is gone: results are now computed from published benchmark scores for 70 CPUs and 75 GPUs (from 2011-era CPUs and 2014 GPUs up to the newest), with no database.
