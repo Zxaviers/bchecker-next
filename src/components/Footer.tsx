@@ -18,8 +18,8 @@ export function Footer() {
               <p className="mt-1 text-lg text-muted">Compiled by</p>
             </div>
             <p className="text-lg text-muted sm:col-span-2">
-              Form BC-1, revision 3. An estimate, not a measurement and not an
-              accredited certificate. Scores from{" "}
+              Form BC-1. An estimate, not a measurement and not an accredited
+              certificate. Scores from{" "}
               <a
                 className="font-medium text-text underline underline-offset-4"
                 href="https://opendata.blender.org"

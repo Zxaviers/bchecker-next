@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T10:55:59.810Z",
+  "title": "Design System: BChecker",
+  "extensions": {
+    "colorMeta": {
+      "teal-ink": {
+        "role": "primary",
+        "displayName": "Teal Ink",
+        "canonical": "#0e6b63",
+        "tonalRamp": [
+          "#0c3b37",
+          "#0c4944",
+          "#0d5650",
+          "#0e645d",
+          "#2d7e77",
+          "#6ba49e",
+          "#a9cac5",
+          "#e7f0ec"
+        ]
+      },
+      "red-stamp": {
+        "role": "secondary",
+        "displayName": "Stamp Red",
+        "canonical": "#b3301a",
+        "tonalRamp": [
+          "#562116",
+          "#712517",
+          "#8b2918",
+          "#a62e19",
+          "#bc4b37",
+          "#cf8072",
+          "#e2b6ac",
+          "#f4ece6"
+        ]
+      },
+      "amber-stamp": {
+        "role": "secondary",
+        "displayName": "Amber Stamp",
+        "canonical": "#955700",
+        "tonalRamp": [
+          "#49320a",
+          "#5e3d07",
+          "#744704",
+          "#8a5201",
+          "#a26d21",
+          "#bd9862",
+          "#d7c3a3",
+          "#f2efe4"
+        ]
+      },
+      "desk": {
+        "role": "neutral",
+        "displayName": "Desk Teal",
+        "canonical": "#1b4742",
+        "tonalRamp": [
+          "#122b28",
+          "#143330",
+          "#173b37",
+          "#1a433e",
+          "#385f5a",
+          "#738e8a",
+          "#aebeba",
+          "#e8eee9"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#e4eae1",
+        "tonalRamp": [
+          "#6c7470",
+          "#8e9690",
+          "#b1b8b0",
+          "#d3d9d1",
+          "#e7ece4",
+          "#edf1ea",
+          "#f2f6f0",
+          "#f8fbf6"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#12312e",
+        "tonalRamp": [
+          "#0e211f",
+          "#0f2623",
+          "#102a28",
+          "#112f2c",
+          "#304c49",
+          "#6d817e",
+          "#aab6b3",
+          "#e7ece8"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "#47605c",
+        "tonalRamp": [
+          "#253634",
+          "#2f423f",
+          "#394e4b",
+          "#425a56",
+          "#5f7571",
+          "#8e9e9a",
+          "#bdc7c3",
+          "#ecf0ec"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The page title only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Lettered section titles A to G."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sub-headings inside a section."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose, about 62ch."
+      },
+      "typed": {
+        "displayName": "Typed",
+        "purpose": "Every filled-in value: scores, readings, report numbers."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form field legends only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet",
+        "value": "0 2px 4px rgb(0 0 0 / 0.25), 0 36px 60px -24px rgb(0 0 0 / 0.6)",
+        "purpose": "The report sheet resting on the desk."
+      },
+      {
+        "name": "under-sheet",
+        "value": "0 2px 4px rgb(0 0 0 / 0.2), 0 28px 44px -22px rgb(0 0 0 / 0.55)",
+        "purpose": "The second sheet beneath the report."
+      },
+      {
+        "name": "raised-button",
+        "value": "0 10px 18px -8px rgb(18 49 46 / 0.7)",
+        "purpose": "The primary action standing proud of the paper."
+      }
+    ],
+    "motion": [
+      {
+        "name": "stamp-in",
+        "value": "340ms cubic-bezier(0.2, 0.9, 0.2, 1)",
+        "purpose": "The verdict stamp lands; the page's single authored motion."
+      },
+      {
+        "name": "press",
+        "value": "80ms ease-out",
+        "purpose": "Primary button pressing 2px down."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Analyze: ink fill, raised on the paper, presses down.",
+      "html": "<button class=\"ds-btn\">Analyze</button>",
+      "css": ".ds-btn{background:#12312e;color:#f3f6ee;padding:12px 48px;border:0;border-radius:0;font:700 24px 'Barlow Condensed',sans-serif;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 10px 18px -8px rgb(18 49 46 / .7);transition:background-color .15s ease-out,transform .08s ease-out}.ds-btn:hover{background:#0e6b63}.ds-btn:active{transform:translateY(2px);box-shadow:0 3px 6px -3px rgb(18 49 46 / .7)}.ds-btn:focus-visible{outline:3px solid #0e6b63;outline-offset:2px}.ds-btn:disabled{background:#a9b8ac;color:#12312e;box-shadow:none}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "entry",
+      "description": "Typed entry box for filtering the part lists.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search by name\" />",
+      "css": ".ds-input{background:#fbfcf8;border:1.5px solid #12312e;border-radius:0;padding:8px 12px;font:400 16px 'Courier Prime',monospace;color:#12312e;width:260px}.ds-input::placeholder{color:#47605c}.ds-input:focus-visible{outline:3px solid #0e6b63;outline-offset:2px}"
+    },
+    {
+      "name": "Vendor Chip",
+      "kind": "chip",
+      "description": "Filter chip; inverts to ink when pressed.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"true\">AMD</button>",
+      "css": ".ds-chip{background:#fbfcf8;border:1.5px solid #12312e;padding:8px 12px;font:600 14px 'Barlow Condensed',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#12312e}.ds-chip:hover{background:rgb(14 107 99 / .1)}.ds-chip[aria-pressed=true]{background:#12312e;color:#f3f6ee}.ds-chip:focus-visible{outline:3px solid #0e6b63;outline-offset:2px}"
+    },
+    {
+      "name": "Selection Tile",
+      "kind": "custom",
+      "refersTo": "entry-selected",
+      "description": "Radio tile for resolution and purpose; selected inverts to ink with a tick.",
+      "html": "<div class=\"ds-tile\" data-selected=\"true\"><span class=\"ds-box\">&#10003;</span>QHD 1440p</div>",
+      "css": ".ds-tile{display:flex;align-items:center;gap:12px;background:#fbfcf8;border:1.5px solid #12312e;padding:10px 16px;font:600 20px 'Barlow Condensed',sans-serif;color:#12312e;width:200px}.ds-tile:hover{background:rgb(14 107 99 / .1)}.ds-tile[data-selected=true]{background:#12312e;color:#f3f6ee}.ds-box{display:inline-grid;place-items:center;width:20px;height:20px;border:1.5px solid currentColor;font-size:12px}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "description": "Two underlined text links in the masthead.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">Method</a><a href=\"#\">Sources and limits</a></nav>",
+      "css": ".ds-nav a{font:500 18px 'Barlow Condensed',sans-serif;color:#12312e;text-decoration:underline;text-decoration-color:#47605c;text-underline-offset:4px;margin-right:24px}.ds-nav a:hover{text-decoration-color:#12312e}.ds-nav a:focus-visible{outline:3px solid #0e6b63;outline-offset:2px}"
+    },
+    {
+      "name": "Verdict Stamp",
+      "kind": "custom",
+      "description": "Rubber stamp carrying the verdict after a test.",
+      "html": "<span class=\"ds-stamp\">Upgrade CPU</span>",
+      "css": ".ds-stamp{display:inline-block;padding:8px 24px;border:5px double #b3301a;color:#b3301a;font:700 40px 'Barlow Condensed',sans-serif;letter-spacing:.12em;text-transform:uppercase;line-height:1.1;transform:rotate(-4deg);mix-blend-mode:multiply}"
+    },
+    {
+      "name": "Section Heading",
+      "kind": "custom",
+      "description": "Lettered section tab with a heading and a thick rule.",
+      "html": "<div class=\"ds-sec\"><span class=\"ds-tab\">A</span><h2>Items under test</h2></div>",
+      "css": ".ds-sec{display:flex;align-items:center;gap:12px;border-bottom:2px solid #12312e;padding-bottom:8px;width:360px}.ds-tab{display:inline-grid;place-items:center;min-width:32px;height:32px;background:#12312e;color:#f3f6ee;font:700 18px 'Barlow Condensed',sans-serif}.ds-sec h2{margin:0;font:700 36px 'Barlow Condensed',sans-serif;letter-spacing:-.025em;color:#12312e}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Stamped Test Report",
+    "overview": "BChecker is a laboratory test report you fill in and get stamped. The whole page is one sheet of cool security paper lying on a deep teal desk, with a second sheet turned slightly beneath it. Everything on the sheet is printed in teal-black ink: lettered sections, ruled form boxes, typed entries, a graduated scale, and, once a test has run, a red rubber stamp carrying the verdict.",
+    "keyCharacteristics": [
+      "One paper sheet on a desk, one cast shadow, a second sheet visible beneath.",
+      "Ink-on-paper contrast: selected means ink fill with paper text, never a glow.",
+      "Two voices only: forms lettering (Barlow Condensed) and typed entries (Courier Prime).",
+      "Sections lettered A to G as a real sequence, as on a printed form.",
+      "A graduated caliper scale and a red stamp carry the result, not a dashboard meter."
+    ],
+    "rules": [
+      {
+        "name": "The Ink Inversion Rule",
+        "body": "A selected entry is ink fill with paper-white text. Selection is never expressed with a glow, a tint or a colour change alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stamp Colour Rule",
+        "body": "Red and amber belong to results (stamp, scale fill, remarks). They are not used for buttons, links or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Forms lettering for what the report says; typewriter for what was entered.",
+        "section": "typography"
+      },
+      {
+        "name": "The Legend-Only Rule",
+        "body": "Tracked uppercase labels exist only as form field legends. Headings are real headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Cast Shadow Rule",
+        "body": "Every shadow has an offset and a blur and is cast onto paper or desk. No glow, no inset, no hard offset, no border-plus-shadow pairing.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Flat Print Rule",
+        "body": "Anything printed on the sheet is flat ink. Depth is not added to individual boxes.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep every elevated surface to the sheet, the under-sheet and the primary button, each with an offset and blur.",
+      "Do express selection as an ink fill with paper-white text.",
+      "Do set filled-in values in Courier Prime and everything else in Barlow Condensed.",
+      "Do continue the lettered sequence (A to G) when adding a section, with the shared section heading.",
+      "Do keep component classes inside @layer components so utilities can override them."
+    ],
+    "donts": [
+      "Don't return to the near-black neon-green HUD, corner brackets or a grid backdrop.",
+      "Don't add inset shadows, bevels or glows to printed boxes.",
+      "Don't use red or amber for chrome, links or decoration.",
+      "Don't place a tracked small-caps caption above a heading.",
+      "Don't add grain or paper-fibre imitations.",
+      "Don't introduce a dark theme without reconsidering the world."
+    ]
+  }
+}

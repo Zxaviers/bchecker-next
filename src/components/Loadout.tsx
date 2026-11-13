@@ -126,7 +126,7 @@ export function Loadout({ onAnalyze, onSelectionChange, disabled }: LoadoutProps
       </details>
 
       {/* Stays in view while the long lists scroll past, so Analyze is never off-screen. */}
-      <div className="sticky bottom-0 z-10 -mx-5 mt-8 -mb-5 flex flex-col gap-3 border-t-2 border-line-strong bg-panel px-5 py-4 shadow-[0_-14px_20px_-16px_rgba(18,49,46,0.45)] sm:-mx-8 sm:-mb-8 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <div className="sticky bottom-0 z-10 -mx-5 mt-8 -mb-5 flex flex-col gap-3 border-t-2 border-line-strong bg-panel px-5 py-4 sm:-mx-8 sm:-mb-8 sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <p id="analyze-help" className="text-lg text-muted" aria-live="polite">
           {complete
             ? "All required entries made. Ready to test."

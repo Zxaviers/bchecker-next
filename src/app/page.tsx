@@ -20,13 +20,13 @@ export default function Home() {
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <div className="relative mx-auto max-w-6xl px-2 pb-16 pt-3 sm:px-6 sm:pb-24 sm:pt-10">
+      <div className="relative mx-auto max-w-6xl overflow-x-clip px-2 pb-16 pt-3 sm:px-6 sm:pb-24 sm:pt-10">
         {/* the second sheet, turned slightly beneath the report */}
         <div
           aria-hidden="true"
           className="paper-under absolute inset-x-5 bottom-10 top-6 -rotate-[0.8deg] sm:inset-x-10 sm:bottom-16 sm:top-14"
         />
-        <div className="paper relative overflow-hidden">
+        <div className="paper relative overflow-clip">
           <Header />
           <main id="main" className="relative px-4 pt-10 sm:px-8 sm:pt-14">
             <Seal className="pointer-events-none absolute -right-24 -top-16 hidden h-[30rem] w-[30rem] text-accent opacity-[0.09] md:block" />
