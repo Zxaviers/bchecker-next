@@ -16,10 +16,12 @@ export function Header() {
             BCHECKER
           </span>
         </Link>
-        <p className="eyebrow" aria-label="Data summary">
-          {CPUS.length} CPUs <span aria-hidden="true">/</span>{" "}
-          {GPUS.length} GPUs <span aria-hidden="true">/</span> Blender Open Data
-        </p>
+        <nav aria-label="Page sections" className="eyebrow flex flex-wrap gap-x-5 gap-y-1">
+          <a className="hover:text-text" href="#how-it-works">How it works</a>
+          <a className="hover:text-text" href="#about-data">
+            {CPUS.length} CPUs <span aria-hidden="true">/</span> {GPUS.length} GPUs
+          </a>
+        </nav>
       </div>
     </header>
   );

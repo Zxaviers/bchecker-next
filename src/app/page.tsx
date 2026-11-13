@@ -1,6 +1,8 @@
+import { AboutData } from "@/components/AboutData";
 import { Analyzer } from "@/components/Analyzer";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { HowItWorks } from "@/components/HowItWorks";
 
 export default function Home() {
   return (
@@ -21,6 +23,8 @@ export default function Home() {
         <section aria-label="Loadout" className="mt-10">
           <Analyzer />
         </section>
+        <HowItWorks />
+        <AboutData />
       </main>
       <Footer />
     </>

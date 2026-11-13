@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BChecker
 
-## Getting Started
+A CPU and GPU bottleneck estimator with a game-HUD interface. Pick a processor, a graphics card, a resolution and what you use the PC for, and BChecker estimates which part is holding the other back and by how much.
 
-First, run the development server:
+![BChecker screenshot](docs/screenshot.jpg)
+
+This is a rebuild of an earlier Laravel + PHP + MySQL version. The hand-entered 48-row result table is gone: results are now computed from published benchmark scores for 35 CPUs and 39 GPUs, with no database.
+
+## How it works
+
+1. Every part has a **score**: the median result from [Blender Open Data](https://opendata.blender.org) (Cycles path-tracing samples per minute).
+2. Your purpose and resolution set the **share of the work** that lands on the GPU (the CPU gets the rest). Optional target refresh rate shifts work toward the CPU.
+3. Each part's score is divided by its share of the work. The lower of the two limits the build, and `bottleneck = (1 - weaker / stronger) x 100`. At 10% or less the build counts as balanced.
+
+Calibration: scores are scaled so that an **i5-13400F + RTX 3070 at gaming / 1080p** comes out balanced (about 0%).
+
+Options: 4 resolutions (HD, FHD, QHD, 4K), 6 purposes (general, gaming, competitive/esports, streaming while gaming, video editing, 3D rendering), optional refresh rate (60/120/144/240 Hz) and optional RAM size (8/16/32/64 GB, which only produces advice and never changes the percentage).
+
+## Limits (please read)
+
+- The score is **rendering speed, not game frame rates**. Treat the output as an estimate.
+- Workload shares, the refresh-rate effect and the RAM rules are my own heuristics, labelled as such on the page. Only the CPU and GPU scores are real data.
+- NVIDIA GPUs use OptiX, AMD uses HIP and Intel uses oneAPI (each vendor's Blender default). OptiX uses ray-tracing hardware, so cross-vendor comparisons are approximate.
+- Intel Core i3-13100 has 1 submission behind its score and is flagged "Low sample". The non-F i5-13400 and i7-13700 are not listed individually, so their F variants are used.
+- Desktop parts only.
+
+Data provenance and the licensing check (PassMark was considered and rejected because its terms don't allow republishing scores) are in [docs/data-sources.md](docs/data-sources.md).
+
+## Run it
+
+Requires Node 20.9+ (developed on Node 24).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm test         # Vitest
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+No environment variables and no database. It deploys to Vercel as-is.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/page.tsx                  page: loadout, how it works, about the data
+  app/api/bottleneck/route.ts   POST /api/bottleneck
+  components/                   HUD UI (PartPicker, Segmented, Loadout, Gauge, Result, ...)
+  data/parts.ts                 35 CPUs + 39 GPUs with scores, sources, dates
+  data/options.ts               resolutions, purposes, refresh rates, RAM sizes, workload shares
+  lib/model.ts                  the estimate (pure)
+  lib/calibration.ts            reference scores
+  lib/lookup.ts                 input validation + estimate
+  lib/advisories.ts             RAM advice rules
+docs/                           design spec, implementation plan, data sources
+```
 
-## Learn More
+### API
 
-To learn more about Next.js, take a look at the following resources:
+`POST /api/bottleneck` with JSON `{ cpuId, gpuId, resolutionId, purposeId, refreshHz?, ramGb? }`.
+Returns 200 with `{ cpuName, gpuName, cpuScore, gpuScore, bottleneck, limiting, note, gpuShare, cpuPower, gpuPower, advisories }`, 400 `{ error: "invalid_input" }`, or 404 `{ error: "not_found" }`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Adding a part
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add a row to `CPUS` or `GPUS` in `src/data/parts.ts` with the score read from its source page (never from memory), the submission count, the source URL and the date you read it. `npm test` checks every row for completeness and unique ids.
 
-## Deploy on Vercel
+## Credits
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Benchmark data: [Blender Open Data](https://opendata.blender.org). Built by Zxaviers. Fonts: Chakra Petch and JetBrains Mono.
