@@ -1,3 +1,4 @@
+import { Analyzer } from "@/components/Analyzer";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
@@ -17,8 +18,8 @@ export default function Home() {
           Choose a CPU and a GPU, say what you use them for, and get an
           estimate of which part is the limit and by how much.
         </p>
-        <section aria-label="Loadout" className="hud-panel mt-10 p-6">
-          <p className="eyebrow">Loadout loads here</p>
+        <section aria-label="Loadout" className="mt-10">
+          <Analyzer />
         </section>
       </main>
       <Footer />
