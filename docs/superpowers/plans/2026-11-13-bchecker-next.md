@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Project folder: `C:\Users\riski\Downloads\Desktop\coding\project\bchecker-next`. The old Laravel project is never modified.
+- Project folder: the repository root (`bchecker-next`). The old Laravel project is never modified.
 - **Every CPU/GPU score is read from its cited page and recorded with `source`, `sourceUrl`, `capturedOn` (ISO date). Never typed from memory; a part whose page can't be read is dropped.** If a source's terms forbid manual citation, stop and ask the user.
 - No scraping or bulk download; no database, auth, or admin pages; no per-game FPS data.
 - Only CPU and GPU scores are data. Shares, refresh adjustments, RAM advisories are heuristics and labelled as such on the page.

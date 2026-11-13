@@ -78,5 +78,5 @@ RAM advisories (rule-based, shown beside the result, never in the percentage): G
 - Browser check at 360 / 768 / 1280 px, keyboard-only run-through, reduced-motion check, `next build` clean.
 
 ## Calls the builder owns (settled by me, not the user)
-- Location: `C:\Users\riski\Downloads\Desktop\coding\project\bchecker-next`.
+- Location: the repository root (`bchecker-next`).
 - Which two published indices are used (one CPU, one GPU), the exact part list, fonts (Chakra Petch, JetBrains Mono), accent hex, workload shares and the 10% balanced threshold, component split, Vitest, npm.

@@ -28,7 +28,7 @@ Data provenance and the licensing check (PassMark was considered and rejected be
 
 ## Run it
 
-Requires Node 20.9+ (developed on Node 24).
+Requires Node 22.12+ (developed on Node 24). Released under the MIT license.
 
 ```bash
 npm install
