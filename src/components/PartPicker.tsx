@@ -32,25 +32,23 @@ export function PartPicker({ legend, parts, value, onChange }: PartPickerProps) 
 
   return (
     <fieldset className="min-w-0">
-      <legend className="eyebrow mb-3">{legend}</legend>
+      <legend className="label mb-2">{legend}</legend>
 
       <p
-        className="mb-3 flex min-h-[2.5rem] items-center justify-between gap-3 border border-line-strong bg-panel-raised px-3 py-2 text-sm"
+        className="entry typed mb-3 flex min-h-12 items-center justify-between gap-3 px-3 py-2 text-base"
         aria-live="polite"
       >
         {selected ? (
           <>
-            <span className="font-semibold text-accent">{selected.name}</span>
-            <span className="font-mono text-xs text-muted">
-              {selected.score.toLocaleString("en-US")}
-            </span>
+            <span className="font-bold">{selected.name}</span>
+            <span className="text-muted">{selected.score.toLocaleString("en-US")}</span>
           </>
         ) : (
-          <span className="text-muted">Nothing selected</span>
+          <span className="text-muted">&mdash; none selected &mdash;</span>
         )}
       </p>
 
-      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+      <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-stretch">
         <label className="sr-only" htmlFor={`${uid}-q`}>
           Filter {legend}
         </label>
@@ -59,9 +57,9 @@ export function PartPicker({ legend, parts, value, onChange }: PartPickerProps) 
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filter by name"
+          placeholder="Search by name"
           autoComplete="off"
-          className="min-w-0 flex-1 border border-line bg-bg px-3 py-2 font-mono text-sm text-text placeholder:text-muted"
+          className="entry typed min-w-0 flex-1 px-3 py-2 text-base placeholder:text-muted"
         />
         <div className="flex flex-wrap gap-1.5" role="group" aria-label={`${legend} vendor`}>
           {[null, ...vendors].map((v) => (
@@ -70,7 +68,7 @@ export function PartPicker({ legend, parts, value, onChange }: PartPickerProps) 
               type="button"
               aria-pressed={vendor === v}
               onClick={() => setVendor(v)}
-              className="border border-line px-2.5 py-1.5 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:border-line-strong hover:text-text aria-pressed:border-accent aria-pressed:text-accent"
+              className="border-[1.5px] border-line-strong bg-panel-raised px-3 py-2 text-sm font-semibold uppercase tracking-wider transition-colors hover:bg-accent/10 aria-pressed:bg-line-strong aria-pressed:text-accent-ink"
             >
               {v ?? "All"}
             </button>
@@ -79,11 +77,11 @@ export function PartPicker({ legend, parts, value, onChange }: PartPickerProps) 
       </div>
 
       {visible.length === 0 ? (
-        <p role="status" className="border border-dashed border-line px-3 py-6 text-center text-sm text-muted">
+        <p role="status" className="entry px-3 py-8 text-center text-base text-muted">
           No parts match &ldquo;{query.trim()}&rdquo;.
         </p>
       ) : (
-        <div className="max-h-[22rem] space-y-1.5 overflow-y-auto pr-1">
+        <div className="entry max-h-[15rem] divide-y divide-line overflow-y-auto">
           {visible.map((p) => (
             <label key={p.id} className="relative block cursor-pointer">
               <input
@@ -94,22 +92,22 @@ export function PartPicker({ legend, parts, value, onChange }: PartPickerProps) 
                 onChange={() => onChange(p.id)}
                 className="peer sr-only"
               />
-              <span className="block border border-line bg-panel-raised px-3 py-2 transition-colors hover:border-line-strong peer-checked:border-accent peer-checked:bg-accent/10 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
+              <span className="block px-3 py-2 transition-colors hover:bg-accent/10 peer-checked:bg-line-strong peer-checked:text-accent-ink peer-checked:hover:bg-line-strong peer-checked:[&_.bar-fill]:bg-accent-ink peer-checked:[&_.chip]:bg-accent-ink peer-checked:[&_.chip]:text-line-strong peer-focus-visible:outline-3 peer-focus-visible:-outline-offset-3 peer-focus-visible:outline-accent peer-checked:peer-focus-visible:outline-accent-ink">
                 <span className="flex items-baseline justify-between gap-3">
-                  <span className="min-w-0 truncate text-sm font-medium">{p.name}</span>
-                  <span className="shrink-0 font-mono text-xs text-muted">
+                  <span className="min-w-0 truncate text-lg font-semibold">{p.name}</span>
+                  <span className="typed shrink-0 text-sm opacity-75">
                     {p.score.toLocaleString("en-US")}
                   </span>
                 </span>
-                <span className="mt-1.5 flex items-center gap-2">
-                  <span className="h-1 flex-1 bg-line" aria-hidden="true">
+                <span className="mt-1 flex items-center gap-2">
+                  <span className="h-1.5 flex-1 bg-line" aria-hidden="true">
                     <span
-                      className="block h-full bg-accent"
-                      style={{ width: `${Math.max(3, (p.score / maxScore) * 100)}%` }}
+                      className="bar-fill block h-full bg-accent"
+                      style={{ width: `${Math.max(2, (p.score / maxScore) * 100)}%` }}
                     />
                   </span>
                   {p.samples < 5 ? (
-                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-warn">
+                    <span className="chip bg-warn px-1.5 py-px text-xs font-bold uppercase tracking-wider text-accent-ink">
                       Low sample
                     </span>
                   ) : null}

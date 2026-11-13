@@ -1,6 +1,6 @@
 import { CPUS, GPUS } from "@/data/parts";
 import type { AnalyzeErrorKind, AnalyzeResponse } from "@/lib/analyze";
-import { severity, type Severity } from "@/lib/severity";
+import { severity } from "@/lib/severity";
 import { Gauge } from "./Gauge";
 
 export type ResultState =
@@ -14,36 +14,62 @@ interface ResultProps {
   onRetry: () => void;
 }
 
-const TAG: Record<Severity, string> = {
-  low: "border-accent text-accent",
-  mid: "border-warn text-warn",
-  high: "border-danger text-danger",
-};
-
 const ERROR_TEXT: Record<AnalyzeErrorKind, string> = {
   network: "Couldn't reach the analyzer. Check your connection and try again.",
   invalid_input: "Those options weren't accepted. Reload the page and try again.",
   not_found: "That part isn't in the catalogue. Reload the page and try again.",
 };
 
+/** Deterministic report number derived from the inputs, so a pair always gets the same one. */
+function reportNumber(d: AnalyzeResponse): string {
+  let h = 5381;
+  for (const c of `${d.cpuName}|${d.gpuName}|${d.bottleneck}|${d.gpuShare}`) {
+    h = (h * 33 + c.charCodeAt(0)) >>> 0;
+  }
+  return `BC-${h.toString(36).toUpperCase().padStart(6, "0").slice(0, 6)}`;
+}
+
+function ResultHead({ right }: { right?: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 bg-line-strong px-5 py-3 text-accent-ink sm:px-8">
+      <h2 className="flex items-center gap-3 text-2xl font-bold tracking-wide">
+        <span
+          aria-hidden="true"
+          className="grid h-8 min-w-8 place-items-center bg-accent-ink px-1 text-lg text-line-strong"
+        >
+          D
+        </span>
+        Results of measurement
+      </h2>
+      {right ? <p className="typed text-sm">{right}</p> : null}
+    </div>
+  );
+}
+
 export function Result({ state, onRetry }: ResultProps) {
   if (state.status === "idle") {
     return (
-      <div className="border border-dashed border-line px-5 py-8 text-center text-sm text-muted">
-        Your result appears here. Choose parts above and press Analyze.
+      <div className="sheet">
+        <ResultHead />
+        <p className="px-5 py-10 text-center text-xl text-muted sm:px-8">
+          Your result appears here. Choose parts above and press Analyze.
+        </p>
       </div>
     );
   }
 
   if (state.status === "loading") {
     return (
-      <div className="hud-panel p-6" role="status">
-        <p className="eyebrow">Analyzing</p>
-        <div className="mt-4 h-6 overflow-hidden bg-line" aria-hidden="true">
-          <div
-            className="h-full w-1/4 bg-accent/60"
-            style={{ animation: "scan 1.1s ease-in-out infinite" }}
-          />
+      <div className="sheet" role="status">
+        <ResultHead />
+        <div className="px-5 py-10 sm:px-8">
+          <p className="text-xl">Test in progress&hellip;</p>
+          <div className="entry mt-4 h-8 overflow-hidden" aria-hidden="true">
+            <div
+              className="h-full w-1/4 bg-accent/70"
+              style={{ animation: "scan 1.1s ease-in-out infinite" }}
+            />
+          </div>
         </div>
       </div>
     );
@@ -51,16 +77,19 @@ export function Result({ state, onRetry }: ResultProps) {
 
   if (state.status === "error") {
     return (
-      <div className="hud-panel border-danger p-6" role="alert">
-        <p className="eyebrow text-danger">Error</p>
-        <p className="mt-2">{ERROR_TEXT[state.kind]}</p>
-        <button
-          type="button"
-          onClick={onRetry}
-          className="mt-4 border border-danger px-5 py-2 text-sm font-semibold uppercase tracking-[0.14em] text-danger transition-colors hover:bg-danger hover:text-accent-ink"
-        >
-          Retry
-        </button>
+      <div className="sheet" role="alert">
+        <ResultHead />
+        <div className="px-5 py-8 sm:px-8">
+          <p className="text-xl font-semibold text-danger">Test not completed</p>
+          <p className="mt-1 text-xl">{ERROR_TEXT[state.kind]}</p>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-5 border-2 border-danger px-8 py-2 text-xl font-bold uppercase tracking-[0.14em] text-danger transition-colors hover:bg-danger hover:text-accent-ink"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -75,70 +104,64 @@ export function Result({ state, onRetry }: ResultProps) {
       : `${d.limiting === "CPU" ? d.cpuName : d.gpuName} is the limiting ${d.limiting}.`;
 
   return (
-    <div className="hud-panel p-5 sm:p-7">
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+    <div className="sheet">
+      <ResultHead right={reportNumber(d)} />
+
+      <div className="grid gap-10 px-5 py-8 sm:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
         <div>
-          <p className="eyebrow">05 / Bottleneck</p>
-          <p
-            className="mt-1 font-mono text-6xl font-bold leading-none tracking-tight sm:text-7xl"
-            aria-label={`${d.bottleneck.toFixed(2)} percent bottleneck`}
-          >
-            {d.bottleneck.toFixed(1)}
-            <span className="text-3xl text-muted">%</span>
+          <p className="font-bold leading-[0.85] tracking-tight text-[clamp(4.5rem,12vw,6rem)]">
+            <span aria-hidden="true">
+              {d.bottleneck.toFixed(1)}
+              <span className="text-[0.45em]">%</span>
+            </span>
+            <span className="sr-only">{d.bottleneck.toFixed(2)} percent bottleneck</span>
+          </p>
+          <p className="mt-2 text-2xl font-semibold text-muted">estimated bottleneck</p>
+          <div className="mt-6">
+            <Gauge percent={d.bottleneck} severity={sev} />
+          </div>
+        </div>
+
+        <div className="flex flex-col items-start gap-6 lg:pl-4">
+          <p className={`stamp ${d.limiting === "none" ? "stamp-ok" : "stamp-bad"}`}>
+            {d.note}
+          </p>
+          <p className="text-2xl font-semibold leading-snug">{verdict}</p>
+          <p className="text-lg text-muted">
+            Estimate from rendering benchmarks, not game frame rates.
+            {gpu && gpu.vendor !== "NVIDIA"
+              ? ` ${gpu.vendor} GPU scores use a different Blender backend and the model is calibrated on an NVIDIA card, so GPU-limited results may look worse than they would in games.`
+              : ""}
           </p>
         </div>
-        <p
-          className={`border px-4 py-2 text-sm font-bold uppercase tracking-[0.16em] ${TAG[sev]}`}
+      </div>
+
+      <div className="border-t-2 border-line-strong px-5 py-6 sm:px-8">
+        <h3 className="text-2xl font-bold">Readings</h3>
+        <div
+          className="mt-3 overflow-x-auto"
+          role="region"
+          aria-label="Readings table"
+          tabIndex={0}
         >
-          {d.note}
-        </p>
-      </div>
-
-      <div className="mt-6">
-        <Gauge percent={d.bottleneck} severity={sev} />
-      </div>
-      <p className="mt-4 text-lg">{verdict}</p>
-      <p className="mt-2 text-sm text-muted">
-        Estimate from rendering benchmarks, not game frame rates.
-        {gpu && gpu.vendor !== "NVIDIA"
-          ? ` ${gpu.vendor} GPU scores use a different Blender backend and the model is calibrated on an NVIDIA card, so GPU-limited results may look worse than they would in games.`
-          : ""}
-      </p>
-
-      {d.advisories.length > 0 ? (
-        <div className="mt-6 border border-warn/60 bg-warn/5 p-4">
-          <p className="eyebrow text-warn">RAM notes</p>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-            {d.advisories.map((a) => (
-              <li key={a.id}>{a.message}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      <details className="mt-6 border-t border-line pt-4">
-        <summary className="eyebrow cursor-pointer select-none hover:text-text">
-          How this was calculated
-        </summary>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[22rem] text-left font-mono text-xs">
-            <thead className="text-muted">
-              <tr>
-                <th className="py-1.5 pr-4 font-normal">Part</th>
-                <th className="py-1.5 pr-4 font-normal">Score</th>
-                <th className="py-1.5 pr-4 font-normal">Share of work</th>
-                <th className="py-1.5 font-normal">Power</th>
+          <table className="w-full min-w-[30rem] border-collapse text-left">
+            <thead>
+              <tr className="border-b-2 border-line-strong text-base">
+                <th scope="col" className="py-2 pr-4 font-semibold">Part</th>
+                <th scope="col" className="py-2 pr-4 font-semibold">Score</th>
+                <th scope="col" className="py-2 pr-4 font-semibold">Share of work</th>
+                <th scope="col" className="py-2 font-semibold">Power</th>
               </tr>
             </thead>
-            <tbody className="align-top">
-              <tr className="border-t border-line">
-                <td className="py-2 pr-4 font-sans text-sm">{d.cpuName}</td>
+            <tbody className="typed text-base">
+              <tr className="border-b border-line">
+                <th scope="row" className="py-2 pr-4 text-left font-sans text-xl font-semibold">{d.cpuName}</th>
                 <td className="py-2 pr-4">{d.cpuScore.toLocaleString("en-US")}</td>
                 <td className="py-2 pr-4">{((1 - d.gpuShare) * 100).toFixed(0)}%</td>
                 <td className="py-2">{d.cpuPower.toFixed(2)}</td>
               </tr>
-              <tr className="border-t border-line">
-                <td className="py-2 pr-4 font-sans text-sm">{d.gpuName}</td>
+              <tr>
+                <th scope="row" className="py-2 pr-4 text-left font-sans text-xl font-semibold">{d.gpuName}</th>
                 <td className="py-2 pr-4">{d.gpuScore.toLocaleString("en-US")}</td>
                 <td className="py-2 pr-4">{(d.gpuShare * 100).toFixed(0)}%</td>
                 <td className="py-2">{d.gpuPower.toFixed(2)}</td>
@@ -146,29 +169,36 @@ export function Result({ state, onRetry }: ResultProps) {
             </tbody>
           </table>
         </div>
-        <p className="mt-3 text-sm text-muted">
-          Power = (score / reference score) / share of work. The weaker side limits
-          performance: bottleneck = (1 &minus; weaker / stronger) &times; 100.
+        <p className="mt-3 text-lg text-muted">
+          Power = (score &divide; reference score) &divide; share of work. The weaker side
+          limits performance: bottleneck = (1 &minus; weaker &divide; stronger) &times; 100.
         </p>
-        <p className="mt-2 text-sm text-muted">
+      </div>
+
+      {d.advisories.length > 0 ? (
+        <div className="border-t-2 border-line-strong px-5 py-6 sm:px-8">
+          <h3 className="text-2xl font-bold">Remarks</h3>
+          <ul className="mt-2 list-disc space-y-1 pl-6 text-xl">
+            {d.advisories.map((a) => (
+              <li key={a.id}>{a.message}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      <div className="border-t-2 border-line-strong px-5 py-6 text-lg text-muted sm:px-8">
+        <h3 className="text-2xl font-bold text-text">Traceability</h3>
+        <p className="mt-2">
           Scores are median Blender Open Data results
           {cpu && gpu ? (
             <>
               {" "}
               (
-              <a
-                className="underline underline-offset-4 hover:text-text"
-                href={cpu.sourceUrl}
-                rel="noopener noreferrer"
-              >
+              <a className="font-medium text-text underline underline-offset-4" href={cpu.sourceUrl} rel="noopener noreferrer">
                 CPU source
               </a>
               ,{" "}
-              <a
-                className="underline underline-offset-4 hover:text-text"
-                href={gpu.sourceUrl}
-                rel="noopener noreferrer"
-              >
+              <a className="font-medium text-text underline underline-offset-4" href={gpu.sourceUrl} rel="noopener noreferrer">
                 GPU source
               </a>
               ; read {cpu.capturedOn}
@@ -178,10 +208,9 @@ export function Result({ state, onRetry }: ResultProps) {
               )
             </>
           ) : null}
-          . They measure rendering speed, not game frame rates, so treat the
-          percentage as an estimate.
+          . Report number is derived from the inputs: the same pair always gets the same one.
         </p>
-      </details>
+      </div>
     </div>
   );
 }

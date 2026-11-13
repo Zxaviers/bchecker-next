@@ -1,6 +1,6 @@
 # BChecker
 
-A CPU and GPU bottleneck estimator with a game-HUD interface. Pick a processor, a graphics card, a resolution and what you use the PC for, and BChecker estimates which part is holding the other back and by how much.
+A CPU and GPU bottleneck estimator styled as a stamped laboratory test report. Pick a processor, a graphics card, a resolution and what you use the PC for, and BChecker estimates which part is holding the other back and by how much.
 
 ![BChecker screenshot](docs/screenshot.jpg)
 

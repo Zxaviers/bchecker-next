@@ -7,7 +7,7 @@ interface SegmentedProps {
   options: { id: string; label: string }[];
   value: string | null;
   onChange: (id: string) => void;
-  /** "row" = compact segmented bar, "grid" = large toggle tiles. */
+  /** "row" = compact tick boxes, "grid" = large tick tiles. */
   layout?: "row" | "grid";
   hint?: string;
 }
@@ -21,18 +21,19 @@ export function Segmented({
   hint,
 }: SegmentedProps) {
   const uid = useId();
+  const hintId = `${uid}-hint`;
   const container =
     layout === "grid"
       ? "grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:grid-cols-3"
       : "flex flex-wrap gap-2";
   const tile =
     layout === "grid"
-      ? "block px-4 py-3.5 text-base font-semibold"
-      : "block px-4 py-2.5 text-sm font-medium";
+      ? "flex min-h-16 items-center px-4 py-3 text-xl font-semibold leading-tight"
+      : "flex items-center px-4 py-2.5 text-lg font-semibold";
 
   return (
-    <fieldset className="min-w-0">
-      <legend className="eyebrow mb-3">{legend}</legend>
+    <fieldset className="min-w-0" aria-describedby={hint ? hintId : undefined}>
+      <legend className="label mb-2">{legend}</legend>
       <div className={container}>
         {options.map((o) => (
           <label key={o.id} className="relative cursor-pointer">
@@ -45,14 +46,28 @@ export function Segmented({
               className="peer sr-only"
             />
             <span
-              className={`${tile} border border-line bg-panel-raised text-muted transition-colors hover:border-line-strong hover:text-text peer-checked:border-accent peer-checked:bg-accent/10 peer-checked:text-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent`}
+              className={`${tile} entry gap-3 transition-colors hover:bg-accent/10 peer-checked:bg-line-strong peer-checked:text-accent-ink peer-checked:hover:bg-line-strong peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent`}
             >
+              <span
+                aria-hidden="true"
+                className="grid h-5 w-5 shrink-0 place-items-center border-[1.5px] border-current text-xs leading-none"
+              >
+                {value === o.id ? (
+                  <svg viewBox="0 0 12 12" className="h-3.5 w-3.5" fill="none">
+                    <path d="M2 6.5 5 9.5 10 3" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                ) : null}
+              </span>
               {o.label}
             </span>
           </label>
         ))}
       </div>
-      {hint ? <p className="mt-2 text-xs text-muted">{hint}</p> : null}
+      {hint ? (
+        <p id={hintId} className="mt-2 text-base text-muted">
+          {hint}
+        </p>
+      ) : null}
     </fieldset>
   );
 }

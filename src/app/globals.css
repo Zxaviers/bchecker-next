@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
+/* Security-paper stock, teal-black ink, red stamp. Light only: a daytime desk. */
 :root {
-  --bg: #0a0c0b;
-  --panel: #111513;
-  --panel-raised: #171c19;
-  --line: #26302a;
-  --line-strong: #3a4a40;
-  --text: #e8efe9;
-  --muted: #93a39a;
-  --accent: #b8ff2c;
-  --accent-ink: #0a0c0b;
-  --warn: #ffb020;
-  --danger: #ff5a4f;
-  color-scheme: dark;
+  --bg: #e4eae1;
+  --panel: #eef2e9;
+  --panel-raised: #fbfcf8;
+  --line: #a9b8ac;
+  --line-strong: #12312e;
+  --text: #12312e;
+  --muted: #47605c;
+  --accent: #0e6b63;
+  --accent-ink: #f3f6ee;
+  --warn: #955700;
+  --danger: #b3301a;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -28,79 +29,150 @@
   --color-warn: var(--warn);
   --color-danger: var(--danger);
   --font-sans: var(--font-display);
-  --font-mono: var(--font-mono);
+  --font-mono: var(--font-typed);
 }
 
 html {
-  background: var(--bg);
+  background: #112e2b;
   scroll-behavior: smooth;
 }
 
+/* The desk: deep teal blotter, lit from above. */
 body {
   min-height: 100vh;
-  background-color: var(--bg);
-  /* faint engineering grid, fades out toward the bottom of the viewport */
-  background-image:
-    linear-gradient(to bottom, rgb(10 12 11 / 0) 0%, var(--bg) 85%),
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    48px 48px,
-    48px 48px;
-  background-repeat: no-repeat, repeat, repeat;
-  background-position: top left;
+  background:
+    radial-gradient(120% 70% at 50% 0%, #2b6159 0%, #1b4742 45%, #112e2b 100%) fixed;
   color: var(--text);
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.55;
+  font-family: var(--font-display), "Arial Narrow", sans-serif;
+  font-size: 1.1875rem;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--accent);
+  background: var(--line-strong);
   color: var(--accent-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
-/* Angular HUD panel: thin outline plus two accent corner brackets. */
-.hud-panel {
+/*
+ * Component classes live in Tailwind's components layer so that utilities
+ * (for example peer-checked:bg-line-strong on a .entry tile) can override them.
+ * Unlayered CSS would beat every utility regardless of specificity.
+ */
+@layer components {
+/* The report: a sheet of paper lying on the desk. One cast shadow carries its elevation. */
+.paper {
   position: relative;
-  background: var(--panel);
-  border: 1px solid var(--line);
-}
-.hud-panel::before,
-.hud-panel::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 0 solid var(--accent);
-  pointer-events: none;
-}
-.hud-panel::before {
-  top: -1px;
-  left: -1px;
-  border-top-width: 2px;
-  border-left-width: 2px;
-}
-.hud-panel::after {
-  right: -1px;
-  bottom: -1px;
-  border-right-width: 2px;
-  border-bottom-width: 2px;
+  background: linear-gradient(180deg, #edf2e9 0%, var(--bg) 38%, #dde5da 100%);
+  border-radius: 3px;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.55) inset,
+    0 2px 4px rgb(0 0 0 / 0.25),
+    0 36px 60px -24px rgb(0 0 0 / 0.6);
 }
 
-.eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
+/* A second sheet visible beneath the report, turned slightly. */
+.paper-under {
+  background: #cdd7c9;
+  border-radius: 3px;
+  box-shadow:
+    0 2px 4px rgb(0 0 0 / 0.2),
+    0 28px 44px -22px rgb(0 0 0 / 0.55);
+}
+
+/* A pre-printed form area: thick ink border on a slightly lighter sheet. */
+.sheet {
+  background: var(--panel);
+  border: 2px solid var(--line-strong);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset;
+}
+
+/* A box the visitor fills in: pressed into the paper, so it reads as recessed. */
+.entry {
+  background: var(--panel-raised);
+  border: 1.5px solid var(--line-strong);
+  box-shadow: inset 0 2px 3px rgb(18 49 46 / 0.18);
+}
+
+/* The primary action stands proud of the paper and presses down. */
+.btn-primary {
+  background: var(--line-strong);
+  color: var(--accent-ink);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.18) inset,
+    0 10px 18px -8px rgb(18 49 46 / 0.7);
+  transition:
+    background-color 150ms ease-out,
+    transform 80ms ease-out,
+    box-shadow 80ms ease-out;
+}
+.btn-primary:enabled:hover {
+  background: var(--accent);
+}
+.btn-primary:enabled:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.18) inset,
+    0 3px 6px -3px rgb(18 49 46 / 0.7);
+}
+.btn-primary:disabled {
+  background: var(--line);
+  color: var(--line-strong);
+  box-shadow: none;
+}
+
+.typed {
+  font-family: var(--font-typed), "Courier New", monospace;
+}
+
+/* Small pre-printed caption for a form field. */
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+/* Lettered section tab, as on a printed form. */
+.tab {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.4rem;
+  background: var(--line-strong);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Rubber verdict stamp. */
+.stamp {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  border: 5px double currentColor;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  transform: rotate(-4deg);
+  mix-blend-mode: multiply;
+  animation: stamp-in 340ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+.stamp-bad {
+  color: var(--danger);
+}
+.stamp-ok {
+  color: var(--accent);
+}
+
 }
 
 .skip-link {
@@ -109,7 +181,7 @@ body {
   top: -64px;
   z-index: 50;
   padding: 10px 14px;
-  background: var(--accent);
+  background: var(--line-strong);
   color: var(--accent-ink);
   font-weight: 600;
 }
@@ -117,17 +189,14 @@ body {
   top: 12px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: rotate(-9deg) scale(1.7);
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+  to {
+    opacity: 1;
+    transform: rotate(-4deg) scale(1);
   }
 }
 
@@ -148,5 +217,19 @@ body {
   }
   100% {
     transform: translateX(260%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

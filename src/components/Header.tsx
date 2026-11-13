@@ -1,27 +1,25 @@
 import Link from "next/link";
-import { CPUS, GPUS } from "@/data/parts";
+import { Guilloche } from "./Guilloche";
 
 export function Header() {
   return (
-    <header className="border-b border-line">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-3" aria-label="BChecker home">
-          <span
-            aria-hidden="true"
-            className="grid h-9 w-9 place-items-center border-2 border-accent font-bold leading-none text-accent"
-          >
-            B
-          </span>
-          <span className="text-xl font-bold tracking-[0.18em] text-text">
-            BCHECKER
-          </span>
-        </Link>
-        <nav aria-label="Page sections" className="eyebrow flex flex-wrap gap-x-5 gap-y-1">
-          <a className="hover:text-text" href="#how-it-works">How it works</a>
-          <a className="hover:text-text" href="#about-data">
-            {CPUS.length} CPUs <span aria-hidden="true">/</span> {GPUS.length} GPUs
-          </a>
-        </nav>
+    <header>
+      <Guilloche className="block text-accent" height={44} />
+      <div className="border-b-2 border-line-strong">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 px-4 py-3 sm:px-8">
+          <Link href="/" className="flex items-baseline gap-4" aria-label="BChecker home">
+            <span className="text-3xl font-bold leading-none tracking-[0.06em]">BCHECKER</span>
+            <span className="hidden text-lg text-muted sm:inline">Component pairing test report</span>
+          </Link>
+          <nav aria-label="Page sections" className="flex gap-6 text-lg font-medium">
+            <a className="underline decoration-muted underline-offset-4 hover:decoration-line-strong" href="#how-it-works">
+              Method
+            </a>
+            <a className="underline decoration-muted underline-offset-4 hover:decoration-line-strong" href="#about-data">
+              Sources and limits
+            </a>
+          </nav>
+        </div>
       </div>
     </header>
   );

@@ -41,17 +41,24 @@ export function Analyzer() {
     setState((prev) => (prev.status === "idle" ? prev : { status: "idle" }));
   }
 
+  // One short announcement for screen readers, instead of the whole result panel.
+  const announcement =
+    state.status === "success"
+      ? `${state.data.bottleneck.toFixed(1)} percent bottleneck. ${state.data.note}.`
+      : "";
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Loadout onAnalyze={run} onSelectionChange={reset} />
-      <div aria-live="polite">
-        <Result
-          state={state}
-          onRetry={() => {
-            if (lastSelectionRef.current) run(lastSelectionRef.current);
-          }}
-        />
-      </div>
+      <p aria-live="polite" className="sr-only">
+        {announcement}
+      </p>
+      <Result
+        state={state}
+        onRetry={() => {
+          if (lastSelectionRef.current) run(lastSelectionRef.current);
+        }}
+      />
     </div>
   );
 }

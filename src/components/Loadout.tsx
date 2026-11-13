@@ -19,6 +19,7 @@ import {
   type Selection,
 } from "@/lib/selection";
 import { PartPicker } from "./PartPicker";
+import { SectionHead } from "./SectionHead";
 import { Segmented } from "./Segmented";
 
 interface LoadoutProps {
@@ -48,36 +49,40 @@ export function Loadout({ onAnalyze, onSelectionChange, disabled }: LoadoutProps
 
   return (
     <form
-      className="hud-panel p-5 sm:p-7"
+      className="sheet p-5 sm:p-8"
       onSubmit={(e) => {
         e.preventDefault();
         if (isComplete(sel)) onAnalyze(sel);
       }}
     >
-      <div className="grid gap-8 lg:grid-cols-2">
+      <SectionHead letter="A" title="Items under test" />
+      <div className="mt-6 grid gap-8 lg:grid-cols-2">
         <PartPicker
-          legend="01 / Processor"
+          legend="A1. Processor"
           parts={CPUS}
           value={sel.cpuId}
           onChange={(id) => update({ cpuId: id })}
         />
         <PartPicker
-          legend="02 / Graphics card"
+          legend="A2. Graphics card"
           parts={GPUS}
           value={sel.gpuId}
           onChange={(id) => update({ gpuId: id })}
         />
       </div>
 
-      <div className="mt-8 grid gap-8 border-t border-line pt-8 lg:grid-cols-[1fr_1.6fr]">
+      <div className="mt-12">
+        <SectionHead letter="B" title="Conditions of use" />
+      </div>
+      <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_1.7fr]">
         <Segmented
-          legend="03 / Resolution"
+          legend="B1. Resolution"
           options={RESOLUTIONS.map((r) => ({ id: r.id, label: r.label }))}
           value={sel.resolutionId}
           onChange={(id) => update({ resolutionId: id as ResolutionId })}
         />
         <Segmented
-          legend="04 / Purpose"
+          legend="B2. Purpose"
           layout="grid"
           options={PURPOSES.map((p) => ({ id: p.id, label: p.label }))}
           value={sel.purposeId}
@@ -85,13 +90,16 @@ export function Loadout({ onAnalyze, onSelectionChange, disabled }: LoadoutProps
         />
       </div>
 
-      <details className="group mt-8 border-t border-line pt-6">
-        <summary className="eyebrow cursor-pointer select-none hover:text-text">
-          Advanced options (optional)
+      <details className="mt-10">
+        <summary className="cursor-pointer select-none border-b-2 border-line-strong pb-2 text-2xl font-bold tracking-wide hover:text-accent">
+          <span className="tab mr-3" aria-hidden="true">
+            C
+          </span>
+          Optional particulars
         </summary>
-        <div className="mt-5 grid gap-8 lg:grid-cols-2">
+        <div className="mt-6 grid gap-8 lg:grid-cols-2">
           <Segmented
-            legend="Target refresh rate"
+            legend="C1. Target refresh rate"
             hint="Higher frame-rate targets load the CPU more. Affects gaming, esports and streaming only."
             options={[
               { id: NOT_SET, label: "Not set" },
@@ -103,7 +111,7 @@ export function Loadout({ onAnalyze, onSelectionChange, disabled }: LoadoutProps
             }
           />
           <Segmented
-            legend="RAM"
+            legend="C2. RAM"
             hint="Adds advice only. It never changes the bottleneck percentage."
             options={[
               { id: NOT_SET, label: "Not set" },
@@ -117,17 +125,18 @@ export function Loadout({ onAnalyze, onSelectionChange, disabled }: LoadoutProps
         </div>
       </details>
 
-      <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p id="analyze-help" className="text-sm text-muted" aria-live="polite">
+      {/* Stays in view while the long lists scroll past, so Analyze is never off-screen. */}
+      <div className="sticky bottom-0 z-10 -mx-5 mt-8 -mb-5 flex flex-col gap-3 border-t-2 border-line-strong bg-panel px-5 py-4 shadow-[0_-14px_20px_-16px_rgba(18,49,46,0.45)] sm:-mx-8 sm:-mb-8 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <p id="analyze-help" className="text-lg text-muted" aria-live="polite">
           {complete
-            ? "Ready. Run the analysis."
-            : `Still needed: ${missing.join(", ")}.`}
+            ? "All required entries made. Ready to test."
+            : `Required entries missing: ${missing.join(", ")}.`}
         </p>
         <button
           type="submit"
           disabled={!complete || disabled}
           aria-describedby="analyze-help"
-          className="bg-accent px-8 py-3 text-base font-bold uppercase tracking-[0.16em] text-accent-ink transition-opacity enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:bg-line disabled:text-muted"
+          className="btn-primary px-12 py-3 text-2xl font-bold uppercase tracking-[0.18em] disabled:cursor-not-allowed"
         >
           Analyze
         </button>
