@@ -1,21 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { analyze, AnalyzeError } from "@/lib/analyze";
 import type { CompleteSelection } from "@/lib/selection";
 import { Loadout } from "./Loadout";
+import { Result, type ResultState } from "./Result";
 
 export function Analyzer() {
-  // Temporary readout; Task 7 replaces this with the real analyze flow.
-  const [last, setLast] = useState<CompleteSelection | null>(null);
+  const [state, setState] = useState<ResultState>({ status: "idle" });
+  const controllerRef = useRef<AbortController | null>(null);
+  const lastSelectionRef = useRef<CompleteSelection | null>(null);
+
+  // Abort anything still in flight when the page unmounts.
+  useEffect(() => () => controllerRef.current?.abort(), []);
+
+  function run(selection: CompleteSelection) {
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    lastSelectionRef.current = selection;
+    setState({ status: "loading" });
+
+    analyze(selection, controller.signal)
+      .then((data) => {
+        if (controllerRef.current === controller) setState({ status: "success", data });
+      })
+      .catch((err: unknown) => {
+        if ((err as { name?: string } | null)?.name === "AbortError") return;
+        if (controllerRef.current !== controller) return;
+        setState({
+          status: "error",
+          kind: err instanceof AnalyzeError ? err.kind : "network",
+        });
+      });
+  }
+
+  function reset() {
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    setState((prev) => (prev.status === "idle" ? prev : { status: "idle" }));
+  }
 
   return (
     <div className="space-y-6">
-      <Loadout onAnalyze={setLast} onSelectionChange={() => setLast(null)} />
-      {last ? (
-        <pre className="hud-panel overflow-x-auto p-4 font-mono text-xs">
-          {JSON.stringify(last, null, 2)}
-        </pre>
-      ) : null}
+      <Loadout onAnalyze={run} onSelectionChange={reset} />
+      <div aria-live="polite">
+        <Result
+          state={state}
+          onRetry={() => {
+            if (lastSelectionRef.current) run(lastSelectionRef.current);
+          }}
+        />
+      </div>
     </div>
   );
 }
