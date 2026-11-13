@@ -35,7 +35,7 @@ export function Segmented({
       <legend className="eyebrow mb-3">{legend}</legend>
       <div className={container}>
         {options.map((o) => (
-          <label key={o.id} className="cursor-pointer">
+          <label key={o.id} className="relative cursor-pointer">
             <input
               type="radio"
               name={`${uid}-seg`}

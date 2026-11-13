@@ -98,6 +98,12 @@ export function Result({ state, onRetry }: ResultProps) {
         <Gauge percent={d.bottleneck} severity={sev} />
       </div>
       <p className="mt-4 text-lg">{verdict}</p>
+      <p className="mt-2 text-sm text-muted">
+        Estimate from rendering benchmarks, not game frame rates.
+        {gpu && gpu.vendor !== "NVIDIA"
+          ? ` ${gpu.vendor} GPU scores use a different Blender backend and the model is calibrated on an NVIDIA card, so GPU-limited results may look worse than they would in games.`
+          : ""}
+      </p>
 
       {d.advisories.length > 0 ? (
         <div className="mt-6 border border-warn/60 bg-warn/5 p-4">

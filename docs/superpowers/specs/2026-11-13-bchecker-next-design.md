@@ -67,7 +67,7 @@ RAM advisories (rule-based, shown beside the result, never in the percentage): G
 - **Collection step (before coding the model):** open each part's public page in the browser, read the score, record it with URL and date. First read the source's terms; if they forbid even manual citation, stop and ask the user. Never fill a number from memory; if a page cannot be read, drop the part.
 
 ## Design
-- `src/lib/model.ts` - pure `estimate(cpu, gpu, resolution, purpose)`; `src/lib/lookup.ts` - validates ids (accepts numeric strings for resolution/purpose) and calls the model.
+- `src/lib/model.ts` - pure `estimate(cpu, gpu, resolution, purpose)`; `src/lib/lookup.ts` - validates ids and calls the model.
 - `src/app/api/bottleneck/route.ts` - POST `{ cpuId, gpuId, resolutionId, purposeId }` -> 200 `{ bottleneck, limiting: "CPU" | "GPU" | "none", note, cpuScore, gpuScore }`; 400 invalid input; 404 unknown id.
 - UI: with ~30 parts per side, CPU and GPU use a **searchable picker** (filter box + vendor chips + a scrollable radio list of slot cards, each with a mini score bar; real radio inputs so keyboard and screen readers work); resolution segmented control (4); purpose as a 6-option toggle grid; optional refresh-rate and RAM selectors in a collapsible "Advanced" panel; `ANALYZE` disabled until CPU, GPU, resolution and purpose are chosen; result gauge + status tag + a "how this was calculated" readout showing the scores, shares and result; clear empty, loading, error states.
 - Sections: How it works (the model in plain words), About the data (sources table with links and dates, limits: single scores are an approximation, not measured FPS).

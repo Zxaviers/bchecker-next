@@ -85,7 +85,7 @@ export function PartPicker({ legend, parts, value, onChange }: PartPickerProps) 
       ) : (
         <div className="max-h-[22rem] space-y-1.5 overflow-y-auto pr-1">
           {visible.map((p) => (
-            <label key={p.id} className="block cursor-pointer">
+            <label key={p.id} className="relative block cursor-pointer">
               <input
                 type="radio"
                 name={`${uid}-part`}
