@@ -34,9 +34,9 @@ checkParts("CPUS", CPUS);
 checkParts("GPUS", GPUS);
 
 describe("catalogue coverage", () => {
-  test("has at least 20 CPUs and 20 GPUs", () => {
-    expect(CPUS.length).toBeGreaterThanOrEqual(20);
-    expect(GPUS.length).toBeGreaterThanOrEqual(20);
+  test("has at least 60 CPUs and 60 GPUs", () => {
+    expect(CPUS.length).toBeGreaterThanOrEqual(60);
+    expect(GPUS.length).toBeGreaterThanOrEqual(60);
   });
 
   test("keeps the original parts, and the calibration references", () => {
@@ -44,9 +44,10 @@ describe("catalogue coverage", () => {
     const gpuIds = GPUS.map((g) => g.id);
     for (const id of [
       "intel-core-i3-13100",
-      "intel-core-i5-13400f",
-      "intel-core-i7-13700f",
+      "intel-core-i5-13400",
+      "intel-core-i7-13700",
       "intel-core-i9-13900",
+      "intel-core-i5-13400f",
     ]) {
       expect(cpuIds).toContain(id);
     }
@@ -56,6 +57,33 @@ describe("catalogue coverage", () => {
       "nvidia-geforce-rtx-3090",
     ]) {
       expect(gpuIds).toContain(id);
+    }
+  });
+
+  test("includes older hardware (2011-2018 CPUs, 2014-2018 GPUs)", () => {
+    const cpuIds = CPUS.map((c) => c.id);
+    const gpuIds = GPUS.map((g) => g.id);
+    for (const id of [
+      "intel-core-i7-2600k",
+      "intel-core-i7-4790k",
+      "intel-core-i7-6700k",
+      "amd-ryzen-5-1600",
+    ]) {
+      expect(cpuIds).toContain(id);
+    }
+    for (const id of [
+      "nvidia-geforce-gtx-970",
+      "nvidia-geforce-gtx-1060-6gb",
+      "nvidia-geforce-gtx-1080-ti",
+    ]) {
+      expect(gpuIds).toContain(id);
+    }
+  });
+
+  test("every part is read from the same Blender version", () => {
+    for (const p of [...CPUS, ...GPUS]) {
+      expect(p.source, p.id).toContain("Blender 4.5.0");
+      expect(p.sourceUrl, p.id).toContain("blender_version=4.5.0");
     }
   });
 

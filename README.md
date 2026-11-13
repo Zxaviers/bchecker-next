@@ -4,7 +4,7 @@ A CPU and GPU bottleneck estimator with a game-HUD interface. Pick a processor, 
 
 ![BChecker screenshot](docs/screenshot.jpg)
 
-This is a rebuild of an earlier Laravel + PHP + MySQL version. The hand-entered 48-row result table is gone: results are now computed from published benchmark scores for 35 CPUs and 39 GPUs, with no database.
+This is a rebuild of an earlier Laravel + PHP + MySQL version. The hand-entered 48-row result table is gone: results are now computed from published benchmark scores for 70 CPUs and 75 GPUs (from 2011-era CPUs and 2014 GPUs up to the newest), with no database.
 
 ## How it works
 
@@ -21,7 +21,7 @@ Options: 4 resolutions (HD, FHD, QHD, 4K), 6 purposes (general, gaming, competit
 - The score is **rendering speed, not game frame rates**. Treat the output as an estimate.
 - Workload shares, the refresh-rate effect and the RAM rules are my own heuristics, labelled as such on the page. Only the CPU and GPU scores are real data.
 - NVIDIA GPUs use OptiX, AMD uses HIP and Intel uses oneAPI (each vendor's Blender default). OptiX uses ray-tracing hardware, so cross-vendor comparisons are approximate.
-- Intel Core i3-13100 has 1 submission behind its score and is flagged "Low sample". The non-F i5-13400 and i7-13700 are not listed individually, so their F variants are used.
+- All scores come from one Blender version (4.5.0 LTS) so old and new parts are comparable. Intel Core i3-13100 has only 2 submissions and is flagged "Low sample". AMD GPUs older than the RX 5000 series have no usable Blender data and are not listed.
 - Desktop parts only.
 
 Data provenance and the licensing check (PassMark was considered and rejected because its terms don't allow republishing scores) are in [docs/data-sources.md](docs/data-sources.md).
@@ -47,7 +47,7 @@ src/
   app/page.tsx                  page: loadout, how it works, about the data
   app/api/bottleneck/route.ts   POST /api/bottleneck
   components/                   HUD UI (PartPicker, Segmented, Loadout, Gauge, Result, ...)
-  data/parts.ts                 35 CPUs + 39 GPUs with scores, sources, dates
+  data/parts.ts                 70 CPUs + 75 GPUs with scores, sources, dates
   data/options.ts               resolutions, purposes, refresh rates, RAM sizes, workload shares
   lib/model.ts                  the estimate (pure)
   lib/calibration.ts            reference scores

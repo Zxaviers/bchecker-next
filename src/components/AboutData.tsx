@@ -75,10 +75,15 @@ export function AboutData() {
               Comparisons within one vendor are the most reliable.
             </li>
             <li>
-              Intel Core i3-13100 has only 1 submission behind its score, and is
-              marked &ldquo;Low sample&rdquo; in the picker. The non-F i5-13400
-              and i7-13700 are not listed individually, so their F variants are
-              used.
+              Intel Core i3-13100 has only 2 submissions behind its score, and is
+              marked &ldquo;Low sample&rdquo; in the picker. Every other part has
+              at least 5.
+            </li>
+            <li>
+              All scores come from one Blender version (4.5.0 LTS) so old and new
+              parts are comparable. Older hardware is included back to 2011 CPUs
+              and 2014 GPUs. AMD GPUs before the RX 5000 series have no usable
+              Blender data and are not listed.
             </li>
             <li>
               The model compares one CPU number with one GPU number. It ignores
